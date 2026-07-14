@@ -44,30 +44,29 @@
                    (not product)
                    (conj :unknown-product)
 
-                   product
-                   (cond->
-                     (batch-temp-out-of-range?
-                      (:batch-temp-c batch-record)
-                      (:cold-chain-temp-min-c product)
-                      (:cold-chain-temp-max-c product))
-                     (conj :temp-out-of-range)
+                   (and product (:batch-temp-c batch-record)
+                        (batch-temp-out-of-range?
+                         (:batch-temp-c batch-record)
+                         (:cold-chain-temp-min-c product)
+                         (:cold-chain-temp-max-c product)))
+                   (conj :temp-out-of-range)
 
-                     (and (:histamine-ppm batch-record)
-                          (histamine-exceeds-limit? jurisdiction (:histamine-ppm batch-record)))
-                     (conj :histamine-high)
+                   (and (:histamine-ppm batch-record)
+                        (histamine-exceeds-limit? jurisdiction (:histamine-ppm batch-record)))
+                   (conj :histamine-high)
 
-                     (:sanitation-score batch-record)
-                     (when (sanitation-below-floor? (:sanitation-score batch-record))
-                       (conj :sanitation-low))
+                   (and (:sanitation-score batch-record)
+                        (sanitation-below-floor? (:sanitation-score batch-record)))
+                   (conj :sanitation-low)
 
-                     (and (:holding-hours batch-record)
-                          (:batch-temp-c batch-record))
-                     (when (holding-time-exceeded? (:batch-temp-c batch-record) (:holding-hours batch-record))
-                       (conj :holding-time-exceeded))
+                   (and (:holding-hours batch-record)
+                        (:batch-temp-c batch-record)
+                        (holding-time-exceeded? (:batch-temp-c batch-record) (:holding-hours batch-record)))
+                   (conj :holding-time-exceeded)
 
-                     (and (:storage-days batch-record)
-                          product)
-                     (when (shelf-life-expired? product-id (:storage-days batch-record))
-                       (conj :shelf-life-expired))))]
+                   (and (:storage-days batch-record)
+                        product
+                        (shelf-life-expired? product-id (:storage-days batch-record)))
+                   (conj :shelf-life-expired))]
     {:safe? (empty? failures)
      :failures failures}))

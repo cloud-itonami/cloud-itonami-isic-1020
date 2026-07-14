@@ -4,8 +4,8 @@
             [seafoodprocessing.store :as store]
             [seafoodprocessing.advisor :as advisor]))
 
-(deftest test-run-operation-clean-commit
-  (testing "clean batch in phase-2 commits"
+(deftest test-run-operation-clean-high-stakes-escalate
+  (testing "clean batch for high-stakes operation (log-production-batch) escalates in phase-2"
     (let [batch {:product-type :salmon-frozen
                  :batch-temp-c -16.0
                  :holding-hours 12
@@ -25,8 +25,9 @@
           request {:op :log-production-batch :subject "batch-1"}
           context {:actor-id "processor-1" :phase :phase-2}
           result (operation/run-operation st request context {:advisor (advisor/mock-advisor)})]
-      (is (= :commit (:disposition result)))
-      (is (:record result)))))
+      ;; High-stakes operations always escalate to human approval, even when Governor is clean
+      (is (= :escalate (:disposition result)))
+      (is (nil? (:record result))))))
 
 (deftest test-run-operation-temp-violation
   (testing "temperature violation holds the operation"

@@ -29,11 +29,11 @@
       locked?
       {:disposition :hold :reason "Phase is locked (testing only)"}
 
-      escalate-all?
-      {:disposition :escalate :reason "Phase requires escalation for all operations"}
-
       (not (contains? allowed op))
       {:disposition :hold :reason (str "Operation " op " not allowed in phase " phase)}
+
+      escalate-all?
+      {:disposition :escalate :reason "Phase requires escalation for all operations"}
 
       :else
       {:disposition base-disposition})))

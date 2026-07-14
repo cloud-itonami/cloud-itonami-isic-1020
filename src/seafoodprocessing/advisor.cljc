@@ -2,8 +2,8 @@
   "Seafood Processing Advisor -- the LLM node that drafts proposals.")
 
 (defprotocol Advisor
-  (^:doc "Advise on a request. Returns a proposal map with :effect, :value, :cites, :confidence, :summary."
-    -advise [advisor store request]))
+  (-advise [advisor store request]
+    "Advise on a request. Returns a proposal map with :effect, :value, :cites, :confidence, :summary."))
 
 (defn trace
   "Audit trail for an advisor proposal."
