@@ -1,0 +1,23 @@
+## Clojure
+target/
+.cpcache/
+*.jar
+*.class
+.nrepl-port
+.clj-kondo/.cache
+
+## IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+## Test coverage
+coverage/
+.coverage
+
+## Misc
+*.log
+node_modules/

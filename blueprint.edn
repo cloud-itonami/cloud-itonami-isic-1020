@@ -1,0 +1,12 @@
+{:itonami.blueprint/id "cloud-itonami-1020"
+ :itonami.blueprint/name "Seafood Processing Operations"
+ :itonami.blueprint/isic-rev5 "1020"
+ :itonami.blueprint/domain :food/seafood-processing
+ :itonami.blueprint/license "AGPL-3.0-or-later"
+ :itonami.blueprint/social-impact [:food-security :food-safety :fair-labor :marine-sustainability]
+ :itonami.blueprint/governor :seafood-processing-governor
+ :itonami.blueprint/robotics true
+ :itonami.blueprint/required-technologies [:robotics :identity :forms :dmn :bpmn :audit-ledger :cae]
+ :itonami.blueprint/optional-technologies [:optimization :telemetry]
+ :itonami.blueprint/status :public-oss
+ :itonami.blueprint/maturity :blueprint}
