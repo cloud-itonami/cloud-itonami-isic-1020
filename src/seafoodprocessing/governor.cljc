@@ -137,6 +137,21 @@
         [{:rule :contamination-unresolved
           :detail (str subject " に未解決の汚染フラグあり")}]))))
 
+(defn- handoff-malformed-violations
+  "HARD, but ONLY when a `:handoff` map is actually present under the
+  proposal's `:value`: verify (via `facts/handoff-record-well-formed?`)
+  that it carries every required field with a plausible value. Absence
+  of `:handoff` is never itself a violation -- attaching one to this
+  actor's shipment proposal is entirely optional (see
+  `seafoodprocessing.facts`'s \"Downstream Cross-Actor Handoff\"
+  section)."
+  [{:keys [op]} proposal]
+  (when (= op :coordinate-shipment)
+    (let [handoff (get-in proposal [:value :handoff])]
+      (when (and (some? handoff) (not (facts/handoff-record-well-formed? handoff)))
+        [{:rule :handoff-malformed
+          :detail "coordinate-shipment提案に添付された:handoffレコードが必須フィールドを欠く、または数量が正の数でない"}]))))
+
 (defn check
   "Run all Governor checks on a proposal. Returns {:violations [...], :high-stakes? bool}."
   [request context proposal st]
@@ -150,7 +165,8 @@
                         (sanitation-score-violations request st)
                         (metal-detector-violations request st)
                         (shelf-life-violations request st)
-                        (contamination-flag-unresolved request st))
+                        (contamination-flag-unresolved request st)
+                        (handoff-malformed-violations request proposal))
         high-stakes? (contains? high-stakes (:op request))]
     {:violations all-violations
      :high-stakes? high-stakes?}))
