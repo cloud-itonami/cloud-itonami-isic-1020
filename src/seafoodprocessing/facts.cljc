@@ -198,3 +198,39 @@
                 (<= storage-temp-c 15.0) (:safe-hours (:temp-10-15 holding-time-limits))
                 :else (:safe-hours (:temp-above-15 holding-time-limits)))]
     (<= holding-hours limit)))
+
+;; ─────────── Downstream Cross-Actor Handoff (optional, isic-1020 -> isic-1075) ───────────
+;;
+;; `:coordinate-shipment` proposals MAY OPTIONALLY carry a `:handoff`
+;; record under the proposal's `:value` when this actor dispatches a
+;; finished seafood batch to a downstream cook-chill/cook-freeze
+;; prepared-meal manufacturer (e.g. cloud-itonami-isic-1075). Reuses the
+;; SAME `:handoff/*` wire shape isic-1075 already uses for its own
+;; downstream isic-1075<->jsic-4721 handoff -- see superproject
+;; ADR-2607181500. A `:handoff` here is OPTIONAL, not required: existing
+;; shipment proposals worked before this field existed and keep working
+;; unchanged with no `:handoff` attached at all.
+;;
+;;   {:handoff/id "..."
+;;    :handoff/source-actor "cloud-itonami-isic-1020"
+;;    :handoff/batch-id "..."
+;;    :handoff/product-type-id :salmon-frozen
+;;    :handoff/quantity-kg 500.0
+;;    :handoff/dispatched-at-iso "..."}
+
+(defn handoff-record-well-formed?
+  "Positive-sense convenience predicate: does `handoff` carry every
+  REQUIRED `:handoff/*` field (id/source-actor/batch-id/product-type-id/
+  quantity-kg/dispatched-at-iso) with a plausible value (quantity-kg a
+  positive number, the string fields non-blank)? Never validates the
+  OPTIONAL cold-chain/unspsc/gtin fields."
+  [handoff]
+  (boolean
+   (and (map? handoff)
+        (seq (:handoff/id handoff))
+        (seq (:handoff/source-actor handoff))
+        (seq (:handoff/batch-id handoff))
+        (some? (:handoff/product-type-id handoff))
+        (number? (:handoff/quantity-kg handoff))
+        (pos? (:handoff/quantity-kg handoff))
+        (seq (:handoff/dispatched-at-iso handoff)))))

@@ -58,3 +58,45 @@
       (is (= :held (:t fact)))
       (is (= :hold (:disposition fact)))
       (is (= "batch-1" (:subject fact))))))
+
+;; ─────── Downstream Cross-Actor Handoff (optional, isic-1020 -> isic-1075) ───────
+
+(def ^:private well-formed-handoff
+  {:handoff/id "h-1"
+   :handoff/source-actor "cloud-itonami-isic-1020"
+   :handoff/batch-id "batch-1"
+   :handoff/product-type-id :salmon-frozen
+   :handoff/quantity-kg 500.0
+   :handoff/dispatched-at-iso "2026-07-17T00:00:00Z"})
+
+(deftest test-handoff-optional-no-violation
+  (testing "no :handoff at all -> no violation on an otherwise-clean coordinate-shipment"
+    (let [batch {:product-type :salmon-frozen :batch-temp-c -16.0}
+          st (store/mem-store-with-batches {"batch-1" batch})
+          request {:op :coordinate-shipment :subject "batch-1"}
+          proposal {:cites ["spec"] :value {:jurisdiction :us-fda}}
+          context {}
+          verdict (governor/check request context proposal st)]
+      (is (not (some #(= :handoff-malformed (:rule %)) (:violations verdict)))))))
+
+(deftest test-handoff-well-formed-no-violation
+  (testing "well-formed :handoff -> no handoff-malformed violation"
+    (let [batch {:product-type :salmon-frozen :batch-temp-c -16.0}
+          st (store/mem-store-with-batches {"batch-1" batch})
+          request {:op :coordinate-shipment :subject "batch-1"}
+          proposal {:cites ["spec"] :value {:jurisdiction :us-fda :handoff well-formed-handoff}}
+          context {}
+          verdict (governor/check request context proposal st)]
+      (is (not (some #(= :handoff-malformed (:rule %)) (:violations verdict)))))))
+
+(deftest test-handoff-malformed-is-violation
+  (testing "malformed :handoff (missing quantity-kg) -> handoff-malformed violation"
+    (let [batch {:product-type :salmon-frozen :batch-temp-c -16.0}
+          st (store/mem-store-with-batches {"batch-1" batch})
+          request {:op :coordinate-shipment :subject "batch-1"}
+          proposal {:cites ["spec"]
+                    :value {:jurisdiction :us-fda
+                            :handoff (dissoc well-formed-handoff :handoff/quantity-kg)}}
+          context {}
+          verdict (governor/check request context proposal st)]
+      (is (some #(= :handoff-malformed (:rule %)) (:violations verdict))))))

@@ -83,3 +83,26 @@
 
     (is (facts/holding-time-acceptable? 20.0 4))
     (is (not (facts/holding-time-acceptable? 20.0 5)))))
+
+;; ─────── Downstream Cross-Actor Handoff (optional, isic-1020 -> isic-1075) ───────
+
+(def ^:private well-formed-handoff
+  {:handoff/id "h-1"
+   :handoff/source-actor "cloud-itonami-isic-1020"
+   :handoff/batch-id "batch-1"
+   :handoff/product-type-id :salmon-frozen
+   :handoff/quantity-kg 500.0
+   :handoff/dispatched-at-iso "2026-07-17T00:00:00Z"})
+
+(deftest test-handoff-record-well-formed
+  (testing "complete handoff passes"
+    (is (true? (facts/handoff-record-well-formed? well-formed-handoff))))
+
+  (testing "missing :handoff/quantity-kg fails"
+    (is (false? (facts/handoff-record-well-formed? (dissoc well-formed-handoff :handoff/quantity-kg)))))
+
+  (testing "non-positive quantity fails"
+    (is (false? (facts/handoff-record-well-formed? (assoc well-formed-handoff :handoff/quantity-kg 0)))))
+
+  (testing "nil handoff fails"
+    (is (false? (facts/handoff-record-well-formed? nil)))))
