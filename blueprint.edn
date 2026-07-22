@@ -9,4 +9,37 @@
  :itonami.blueprint/required-technologies [:robotics :identity :forms :dmn :bpmn :audit-ledger :cae]
  :itonami.blueprint/optional-technologies [:optimization :telemetry]
  :itonami.blueprint/status :public-oss
- :itonami.blueprint/maturity :blueprint}
+ :itonami.blueprint/maturity :implemented
+ :itonami.blueprint/implemented-slice
+ "SeafoodProcessingAdvisor ⊣ SeafoodProcessingGovernor, langgraph-clj
+ StateGraph (langgraph.graph, seafoodprocessing.operation/build),
+ append-only audit ledger (seafoodprocessing.store/ledger +
+ append-ledger!, newly added to MemStore alongside its existing
+ batch-metadata BatchStore protocol, which is unchanged). Fixes a
+ structural gap: `deps.edn` declared `io.github.kotoba-lang/langgraph`
+ only under an unused `:dev :override-deps` alias (`:deps {}` at top
+ level, so the dependency was never actually resolved), and
+ `operation.cljc`'s `run-operation` was a plain `let`-threaded
+ advisor -> governor -> phase pipeline with zero `langgraph.graph`
+ calls anywhere. Now: a genuinely compiled StateGraph (`:intake ->
+ :advise -> :govern -> :decide -+-> :commit / :request-approval ->
+ :commit / :hold`) with `interrupt-before #{:request-approval}` +
+ in-memory checkpointer for real human-in-the-loop resume. The
+ Governor (independent food-safety checks: cold-chain temperature
+ window, holding time, histamine assay, sanitation score, metal
+ detector pass, evidence-checklist completeness, contamination-flag
+ resolution, shelf-life, handoff well-formedness) and rollout phase
+ gate (`seafoodprocessing.phase`) were already real logic; both are
+ preserved unchanged, only wired into real graph nodes. Four ops
+ (`:log-production-batch` / `:coordinate-shipment` /
+ `:schedule-maintenance` / `:flag-food-safety-concern`).
+ `:log-production-batch` and `:coordinate-shipment` are high-stakes and
+ ALWAYS escalate to a human plant operator via the compiled graph's
+ `:request-approval` node (`interrupt-before`, checkpoint-based
+ resume) when the Governor is clean, proven by
+ `test/seafoodprocessing/operation_test.cljc` exercising commit /
+ hard-hold (temperature violation) / phase-lock-hold / escalate-approve
+ / escalate-reject through the REAL compiled graph end to end, plus a
+ `clojure -M:dev:run` demo runner producing real ledger entries. 31
+ tests / 128 assertions green (`clojure -M:dev:test`), clj-kondo 0
+ errors."}
