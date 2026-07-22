@@ -1,12 +1,19 @@
 {:paths ["src"]
- :deps {}
+ ;; langgraph brings langchain transitively (both zero-/single-dep,
+ ;; all .cljc -> portable to JVM / SCI / ClojureScript / GraalVM). It lives
+ ;; in the kotoba-lang org of this workspace. This repo is standalone
+ ;; (forkable outside the workspace); the :local/root path only resolves
+ ;; inside the monorepo checkout -- a standalone fork should override it
+ ;; with git coordinates (see `io.github.kotoba-lang/langgraph`'s own
+ ;; `deps.edn`, which pins `langchain` via `:git/sha` for exactly this
+ ;; reason).
+ :deps {io.github.kotoba-lang/langgraph
+        {:local/root "../../kotoba-lang/langgraph"}}
  :aliases
- {
+ {;; offline workspace dev -- pin transitive langchain to local checkout
   :dev {:override-deps
         {io.github.kotoba-lang/langchain
-         {:local/root "../../kotoba-lang/langchain"}
-        io.github.kotoba-lang/langgraph
-        {:local/root "../../kotoba-lang/langgraph"}}}
+         {:local/root "../../kotoba-lang/langchain"}}}
   :run {:main-opts ["-m" "seafoodprocessing.sim"]}
   :test {:extra-paths ["test"]
          :extra-deps {io.github.cognitect-labs/test-runner
