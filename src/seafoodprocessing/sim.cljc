@@ -9,8 +9,9 @@
             [seafoodprocessing.operation :as operation]
             [seafoodprocessing.store :as store]))
 
-(defn demo-run []
+(defn demo-run
   "Run a demo scenario: batch intake -> temperature check -> holding time check -> escalate"
+  []
   (let [batch-data {:batch-id "batch-salmon-001"
                     :product-type :salmon-frozen
                     :jurisdiction :us-fda
