@@ -14,7 +14,7 @@
 
   Usage: `clojure -M:render-html [out-file]`
   (default `docs/samples/operator-console.html`)."
-  (:require [clojure.string :as str]
+  (:require [kotoba.lang.text :as str]
             [langgraph.graph :as g]
             [seafoodprocessing.advisor :as advisor]
             [seafoodprocessing.operation :as operation]
