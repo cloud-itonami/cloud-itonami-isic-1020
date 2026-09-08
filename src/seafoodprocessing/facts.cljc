@@ -83,7 +83,7 @@
   ;; clojure.set loaded and would break a ClojureScript build of this .cljc.
   ;; Pre-existing latent portability bug, fixed 2026-07-25.
   (:require [clojure.set :as set]
-            [clojure.string :as str]))
+            [kotoba.lang.text :as str]))
 
 ;; Product types in 1020: low-hazard to high-hazard categories
 (def product-catalog
