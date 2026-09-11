@@ -1,0 +1,20 @@
+{:format :kotoba.cljk-origin/v1
+ :renamed-on "2026-09-11"
+ :decision "adr-2609111500-cljk-rename-all-clojure-source (com-junkawasaki/root 90-docs/adr; owner instruction 2026-09-11)"
+ :rule "value = the extension the file had before the rename. A path ending in .clj.cljk or .cljs.cljk kept it in the name because both platform files existed (or the plain target was taken)."
+ :origins
+ {"src/seafoodprocessing/advisor.cljk" ".cljc"
+  "src/seafoodprocessing/facts.cljk" ".cljc"
+  "src/seafoodprocessing/governor.cljk" ".cljc"
+  "src/seafoodprocessing/operation.cljk" ".cljc"
+  "src/seafoodprocessing/phase.cljk" ".cljc"
+  "src/seafoodprocessing/registry.cljk" ".cljc"
+  "src/seafoodprocessing/render_html.cljk" ".clj"
+  "src/seafoodprocessing/sim.cljk" ".cljc"
+  "src/seafoodprocessing/store.cljk" ".cljc"
+  "test/seafoodprocessing/facts_test.cljk" ".cljc"
+  "test/seafoodprocessing/governor_test.cljk" ".cljc"
+  "test/seafoodprocessing/operation_test.cljk" ".cljc"
+  "test/seafoodprocessing/phase_test.cljk" ".cljc"
+  "test/seafoodprocessing/registry_test.cljk" ".cljc"
+  "test/seafoodprocessing/store_test.cljk" ".cljc"}}
