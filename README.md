@@ -66,19 +66,19 @@ business fleet.
 ## Testing
 
 ```bash
-clojure -M:test
+kbb -M:test
 ```
 
 ## Development / demo
 
 ```bash
-clojure -M:dev:run
+kbb -M:dev:run
 ```
 
 ## Static analysis
 
 ```bash
-clojure -M:lint
+kbb -M:lint
 ```
 
 ## Governance

@@ -6,14 +6,14 @@ Thank you for your interest in contributing to cloud-itonami-isic-1020!
 
 1. **Fork and Clone**: Fork this repository and clone your fork locally.
 2. **Install Dependencies**: Ensure you have Clojure 1.12+ and `clj` installed.
-3. **Run Tests**: `clojure -M:test` to verify the test suite passes.
+3. **Run Tests**: `kbb -M:test` to verify the test suite passes.
 
 ## Development Workflow
 
 1. Create a feature branch from `main`.
 2. Make your changes, keeping code portable (`.cljc`).
 3. Add tests for new functionality.
-4. Run `clojure -M:lint` to check for style/correctness issues.
+4. Run `kbb -M:lint` to check for style/correctness issues.
 5. Commit with clear messages explaining the "why" of your change.
 6. Push to your fork and open a pull request.
 
@@ -26,7 +26,7 @@ Thank you for your interest in contributing to cloud-itonami-isic-1020!
   
 - **Documentation**: Update docstrings and `README.md` as needed.
   
-- **Linting**: Run `clojure -M:lint` before submitting. Fix all errors.
+- **Linting**: Run `kbb -M:lint` before submitting. Fix all errors.
 
 ## Architecture Decisions
 
@@ -42,12 +42,12 @@ operation flow should include:
 
 Run the full suite:
 ```bash
-clojure -M:test
+kbb -M:test
 ```
 
 Run a single test namespace:
 ```bash
-clojure -M:test -k seafoodprocessing.facts-test
+kbb -M:test -k seafoodprocessing.facts-test
 ```
 
 ## Scope Exclusions
