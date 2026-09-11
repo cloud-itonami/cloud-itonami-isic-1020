@@ -37,7 +37,7 @@
  ALWAYS escalate to a human plant operator via the compiled graph's
  `:request-approval` node (`interrupt-before`, checkpoint-based
  resume) when the Governor is clean, proven by
- `test/seafoodprocessing/operation_test.cljc` exercising commit /
+ `test/seafoodprocessing/operation_test.cljk` exercising commit /
  hard-hold (temperature violation) / phase-lock-hold / escalate-approve
  / escalate-reject through the REAL compiled graph end to end, plus a
  `clojure -M:dev:run` demo runner producing real ledger entries. 31
