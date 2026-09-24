@@ -1,5 +1,5 @@
 (ns seafoodprocessing.facts-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [seafoodprocessing.facts :as facts]))
 
 (deftest test-product-catalog
