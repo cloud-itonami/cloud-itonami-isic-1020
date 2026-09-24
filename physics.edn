@@ -1,0 +1,30 @@
+{:physics/schema "itonami.physical-ai.spec.v1"
+ :repo "cloud-itonami/cloud-itonami-isic-1020"
+ :cases
+ [{:id :fish-slurry-ice-chill
+   :kind :thermal
+   :procedure "whole fish is dropped into a slurry-ice tank; the backbone (core) must be chilled within one hour"
+   :params {:conductivity-w-mk 0.45 :density-kg-m3 1050.0 :specific-heat-j-kgk 3600.0
+            :t0-c 15.0 :t-hot-c -1.0 :h-front-w-m2k 200.0 :h-back-w-m2k 0.0 :t-back-ambient-c -1.0
+            :threshold-c 4.0 :duration-s 3600.0 :nodes 21}
+   :sweep {:param :thickness-m :values [0.01 0.02 0.03 0.04 0.05 0.06]}
+   :quantity :final-back-c
+   :limit {:max 4.0 :basis "estimate: chilled-fish practice targets a core at or below ~4 C soon after catch to limit histamine formation; replace with the HACCP plan's critical limit"}
+   :boundary {:lo 0.005 :hi 0.10}}
+  {:id :brine-tank-drain
+   :kind :tank-drain
+   :procedure "robot opens the drain of the brining/washing tank between product lots"
+   :params {:tank-area-m2 2.0 :h0-m 1.2 :h-target-m 0.1 :cd 0.62 :dt-s 0.5}
+   :sweep {:param :orifice-area-m2 :values [5.0e-4 1.0e-3 2.0e-3 3.0e-3 4.0e-3]}
+   :quantity :time-to-target-s
+   :limit {:max 600.0 :basis "estimate: tank must drain within 10 min of the lot change-over window"}
+   :boundary {:lo 1.0e-4 :hi 1.0e-2}}
+  {:id :fish-box-lift
+   :kind :manipulator
+   :procedure "arm lifts an iced fish box from the grading line onto the pallet"
+   :params {:l1-m 0.70 :l2-m 0.60 :m1-kg 12.0 :m2-kg 8.0
+            :from [0.70 0.0] :to [0.20 0.90] :duration-s 2.5 :steps 500}
+   :sweep {:param :payload-kg :values [10.0 15.0 20.0 25.0 30.0]}
+   :quantity :peak-tau1-nm
+   :limit {:max 300.0 :basis "estimate: continuous shoulder torque of a washdown-rated ~25 kg payload arm"}
+   :boundary {:lo 1.0 :hi 80.0}}]}
