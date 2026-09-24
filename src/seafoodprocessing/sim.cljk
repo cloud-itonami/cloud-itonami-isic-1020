@@ -3,7 +3,7 @@
   driving the REAL compiled `seafoodprocessing.operation/build`
   StateGraph via `langgraph.graph/run*` -- not a hand-rolled pipeline
   call."
-  (:require [clojure.pprint]
+  (:require [kotoba.pprint]
             [langgraph.graph :as g]
             [seafoodprocessing.advisor :as advisor]
             [seafoodprocessing.operation :as operation]
@@ -46,9 +46,9 @@
     (println "Disposition:" (:disposition state))
     (when (:record state)
       (println "Record to commit:")
-      (clojure.pprint/pprint (:record state)))
+      (kotoba.pprint/pprint (:record state)))
     (println "Ledger:")
-    (clojure.pprint/pprint (store/ledger initial-store))))
+    (kotoba.pprint/pprint (store/ledger initial-store))))
 
 (defn -main [& _args]
   (demo-run))
