@@ -12,7 +12,7 @@
   node, escalated proposals must interrupt (not silently auto-commit),
   and a HARD governor violation must never be reachable through
   `:request-approval`."
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [langgraph.graph :as g]
             [seafoodprocessing.operation :as operation]
             [seafoodprocessing.store :as store]))

@@ -1,5 +1,5 @@
 (ns seafoodprocessing.phase-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [seafoodprocessing.phase :as phase]))
 
 (deftest test-verdict-to-disposition

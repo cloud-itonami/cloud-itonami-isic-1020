@@ -1,5 +1,5 @@
 (ns seafoodprocessing.registry-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [seafoodprocessing.registry :as registry]))
 
 (deftest test-batch-temp-out-of-range
